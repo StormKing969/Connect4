@@ -25,13 +25,25 @@ def won(board, piece):
 	# Check all horizontal locations for win 
 	for c in range(COLUMN_COUNT-3):
 		for r in range(ROW_COUNT):
-			if board[r][c] == piece and board[r][c+1] and board[r][c+2] and board[r][c+3]:
+			if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
 				return True
 
 	# Check all vertical locations for win 
 	for c in range(COLUMN_COUNT):
 		for r in range(ROW_COUNT-3):
-			if board[r][c] == piece and board[r+1][c] and board[r+2][c] and board[r+3][c]:
+			if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
+				return True
+
+	# Check all sloped diaganol locations for win 
+	for c in range(COLUMN_COUNT-3):
+		for r in range(ROW_COUNT-3):
+			if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
+				return True
+
+	# Check all negatively sloped diaganol locations for win 
+	for c in range(COLUMN_COUNT-3):
+		for r in range(3, ROW_COUNT):
+			if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
 				return True
 
 board = create_board()
@@ -49,6 +61,7 @@ while not game_over:
 
 			if won(board, 1):
 				print("Player 1 won")
+				print_board(board)
 				game_over = True
 	# Ask for Player 2 input
 	else:
@@ -57,8 +70,9 @@ while not game_over:
 			row = get_next_open_row(board, col)
 			drop_piece(board, row, col, 2)
 
-		if won(board, 1):
+		if won(board, 2):
 			print("Player 2 won")
+			print_board(board)
 			game_over = True
 
 	turn += 1
