@@ -1,7 +1,11 @@
 import numpy as np 
+import pygame
+import sys
 
 ROW_COUNT = 6
 COLUMN_COUNT = 7
+BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
 
 def create_board():
 	board = np.zeros((ROW_COUNT, COLUMN_COUNT))
@@ -46,34 +50,61 @@ def won(board, piece):
 			if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
 				return True
 
+def draw_board(board):
+	for c in range(COLUMN_COUNT):
+		for r in range(ROW_COUNT):
+			pygame.draw.rect(screen, BLUE, (c*SQUARE_SIZE, r*SQUARE_SIZE+SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+			pygame.draw.circle(screen, BLACK, (int(c*SQUARE_SIZE+SQUARE_SIZE/2), int(r*SQUARE_SIZE+SQUARE_SIZE+SQUARE_SIZE/2)), RADIUS)
+
 board = create_board()
 game_over = False
 turn = 0
 
+pygame.init()
+
+SQUARE_SIZE = 100
+
+width = COLUMN_COUNT * SQUARE_SIZE
+height = (ROW_COUNT+1) * SQUARE_SIZE
+
+RADIUS = int(SQUARE_SIZE/2 - 5)
+
+size = (width, height)
+
+screen = pygame.display.set_mode(size)
+draw_board(board)
+pygame.display.update()
+
 while not game_over:
-	print_board(board)
-	# Ask for Player 1 input 
-	if turn == 0:
-		col = int(input("Make your choice Player 1 (0-6): "))
-		if is_valid_location(board, col):
-			row = get_next_open_row(board, col)
-			drop_piece(board, row, col, 1)
+	
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			sys.exit()
 
-			if won(board, 1):
-				print("Player 1 won")
-				print_board(board)
-				game_over = True
-	# Ask for Player 2 input
-	else:
-		col = int(input("Make your choice Player 2 (0-6): "))
-		if is_valid_location(board, col):
-			row = get_next_open_row(board, col)
-			drop_piece(board, row, col, 2)
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			continue 
+			# Ask for Player 1 input 
+			# if turn == 0:
+			# 	col = int(input("Make your choice Player 1 (0-6): "))
+			# 	if is_valid_location(board, col):
+			# 		row = get_next_open_row(board, col)
+			# 		drop_piece(board, row, col, 1)
 
-		if won(board, 2):
-			print("Player 2 won")
-			print_board(board)
-			game_over = True
+			# 		if won(board, 1):
+			# 			print("Player 1 won")
+			# 			print_board(board)
+			# 			game_over = True
+			# # Ask for Player 2 input
+			# else:
+			# 	col = int(input("Make your choice Player 2 (0-6): "))
+			# 	if is_valid_location(board, col):
+			# 		row = get_next_open_row(board, col)
+			# 		drop_piece(board, row, col, 2)
 
-	turn += 1
-	turn = turn % 2
+			# 	if won(board, 2):
+			# 		print("Player 2 won")
+			# 		print_board(board)
+			# 		game_over = True
+
+			# turn += 1
+			# turn = turn % 2
